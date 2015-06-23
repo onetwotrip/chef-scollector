@@ -16,10 +16,10 @@
 
 include_recipe 'runit'
 
-%w(
-node['scollector']['conf_dir']
-node['scollector']['collectors_dir']
-).each do |dir|
+[
+node['scollector']['conf_dir'],
+node['scollector']['collectors_dir'],
+].each do |dir|
   directory dir do
     owner 'root'
     group 'root'
@@ -32,7 +32,7 @@ template "#{node['scollector']['conf_dir']}/scollector.toml" do
   mode 0644
   cookbook node['scollector']['config_cookbook']
   source 'scollector.toml.erb'
-  notifies :restart, 'runit_service[scollector]'
+  notifies :restart, 'runit_service[scollector]', :delayed
 end
 
 runit_service 'scollector' do
