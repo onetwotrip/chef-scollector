@@ -14,5 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-include_recipe 'golang::packages'
+custom_repo = node['scollector']['custom_repo']
+
+if custom_repo
+  package 'scollector' do
+    action :upgrade
+  end
+  node.set['go']['packages'] = []
+end
+
+include_recipe 'golang::packages' if not custom_repo
 include_recipe 'scollector::configure'

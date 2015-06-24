@@ -11,3 +11,5 @@ default['scollector']['tags'] 		= {
 }
 
 default['go']['packages']           	= ['bosun.org/cmd/scollector']
+
+default['scollector']['custom_repo'] = false
