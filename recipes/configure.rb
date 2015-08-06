@@ -28,11 +28,10 @@ node['scollector']['collectors_dir'],
   end
 end
 
-template "#{node['scollector']['conf_dir']}/scollector.toml" do
-  mode 0644
-  cookbook node['scollector']['config_cookbook']
-  source 'scollector.toml.erb'
-  notifies :restart, 'runit_service[scollector]', :delayed
+scollector_config = node['scollector']['config']
+scollector "main" do
+  config scollector_config
+  action :create
 end
 
 runit_service 'scollector' do
