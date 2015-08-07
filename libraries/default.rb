@@ -1,4 +1,3 @@
-require 'chef/resource/package'
 require 'chef/resource/chef_gem'
 
 module Scollector
