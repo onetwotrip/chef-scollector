@@ -19,26 +19,26 @@ Currently tested only on Ubuntu 14.04. Probably works on Debain and may work on 
 Attributes
 ----------
 
-* `node['scollector']['host']` - Sets bosun server host
-* `node['scollector']['port']` - Sets bosun server port
 * `node['scollector']['bin_path']` - Sets path to scollector executable
 * `node['scollector']['conf_dir']` - Sets dir for scollector config dir
 * `node['scollector']['log_dir']` - Sets dir for logs dir
 * `node['scollector']['collectors_dir']`  - Sets dir for external collectors (scollector runs all executables every `interval` sec in collectors_dir/`interval`/)
-* `node['scollector']['config_cookbook']` - Cookbook where template scollector.conf.erb is stored
-* `node['scollector']['tags']` - Tags to add to metrics, that scollector sends to bosun.
-
+* `node['scollector']['config]` - sets a hash of configuration values that are marshaled to conf_dir/scollector.toml
+* `node['scollector']['install_method']` - Installation method, 'source' for `go get`, `package` uses standard Chef `package` resource, you must provide a repository that contains `scollector` package
+* `node['scollector']['version']` - Package version, only works with `package` installation method, use:
+* * '' for plain `:install`
+* * `latest` for `:upgrade`
+* * `0.2.0` for specific version install
 
 Recipes
 -------
 This section describes the recipes in the cookbook and how to use them in your environment.
 
 ### default
-Includes the `golang::packages` and `scollector::configure` recipes by default.
+Includes the `scollector::configure` and either `golang::packages` or `scollector::install_package` depending on `node['scollector']['install_method']` attribute value.
 
 ### configure
-Configures scollector.conf and enables runit service for scollector.
-
+Enables runit service for scollector and marshals `node['scollector']['config']` content into `scollector.toml` file.
 
 Usage
 -----
@@ -47,10 +47,37 @@ You can include `scollector::default` in your company cookbook and redefine attr
 ### companyname-scollector/attributes/default.rb:
 * `default['scollector']['host'] = '192.168.169.21'`
 * `default['scollector']['port'] = 8070`
+* default['scollector']['config'] = {
+    'Host' => 'https://user:password@bosun.example.com/',
+    'tags' => {
+      'environment' => node.chef_environment,
+      'role' => node.run_list.roles.first || 'unknown',
+    },
+    'ColDir' => node['scollector']['collectors_dir'],
+    'ICMP' => [
+      {'Host'  => 'google.com' },
+      {'Host'  => 'test.example.com' },
+    ],
+}
+
 
 Or you can redefine it in your role or environment.
 
 NOTE: Make sure that you are using golang cookbook from github (see Berksfile).
+
+You can also append configuration snippets in other cookbooks (e.g. include metrics collection for nginx in nginx cookbook), just make sure `scollector::default` is included into run_list.
+
+### companyname-nginx/attributes/default.rb:
+default['scollector']['config'] = node['scollector']['config']
+                                  .merge({
+                                           'Process' => [
+                                             {
+                                               'Name' => 'nginx',
+                                               'Command' => "/usr/sbin/nginx",
+                                               'Args' => '.*',
+                                             },
+                                           ]
+                                         })
 
 Testing
 -----
