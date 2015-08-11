@@ -14,14 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-custom_repo = node['scollector']['custom_repo']
+install_from_package = node['scollector']['install_method'] == 'package'
+install_from_source = node['scollector']['install_method'] == 'source'
 
-if custom_repo
-  package 'scollector' do
-    action :upgrade
-  end
-  node.set['go']['packages'] = []
-end
 
-include_recipe 'golang::packages' if not custom_repo
+include_recipe 'golang::packages' if install_from_source
+include_recipe 'scollector::install_package' if install_from_package
 include_recipe 'scollector::configure'
