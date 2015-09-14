@@ -26,9 +26,9 @@ Attributes
 * `node['scollector']['config]` - sets a hash of configuration values that are marshaled to conf_dir/scollector.toml
 * `node['scollector']['install_method']` - Installation method, 'source' for `go get`, `package` uses standard Chef `package` resource, you must provide a repository that contains `scollector` package
 * `node['scollector']['version']` - Package version, only works with `package` installation method, use:
-* * '' for plain `:install`
-* * `latest` for `:upgrade`
-* * `0.2.0` for specific version install
+  * '' (empty string) for plain `:install`
+  * `latest` for `:upgrade`
+  * `0.2.0` for specific version install
 
 Recipes
 -------
