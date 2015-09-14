@@ -1,7 +1,7 @@
 scollector Cookbook
 ===================
 
-This cookbook downloads and installs [scollector](https://github.com/bosun-monitor/bosun/tree/master/cmd/scollector) for [bosun](bosun.org).
+This cookbook downloads and installs [scollector](https://github.com/bosun-monitor/bosun/tree/master/cmd/scollector) for [Bosun](bosun.org).
 
 
 Requirements
@@ -45,9 +45,10 @@ Usage
 
 You can include `scollector::default` in your company cookbook and redefine attributes there like
 ### companyname-scollector/attributes/default.rb:
-* `default['scollector']['host'] = '192.168.169.21'`
-* `default['scollector']['port'] = 8070`
-* default['scollector']['config'] = {
+```ruby
+default['scollector']['host'] = '192.168.169.21'
+default['scollector']['port'] = 8070
+default['scollector']['config'] = {
     'Host' => 'https://user:password@bosun.example.com/',
     'tags' => {
       'environment' => node.chef_environment,
@@ -59,25 +60,26 @@ You can include `scollector::default` in your company cookbook and redefine attr
       {'Host'  => 'test.example.com' },
     ],
 }
-
+```
 
 Or you can redefine it in your role or environment.
 
 NOTE: Make sure that you are using golang cookbook from github (see Berksfile).
 
 You can also append configuration snippets in other cookbooks (e.g. include metrics collection for nginx in nginx cookbook), just make sure `scollector::default` is included into run_list.
-
+```ruby
 ### companyname-nginx/attributes/default.rb:
 default['scollector']['config'] = node['scollector']['config']
                                   .merge({
                                            'Process' => [
                                              {
                                                'Name' => 'nginx',
-                                               'Command' => "/usr/sbin/nginx",
+                                               'Command' => '/usr/sbin/nginx',
                                                'Args' => '.*',
                                              },
                                            ]
                                          })
+```                                         
 
 Testing
 -----
@@ -89,6 +91,7 @@ Testing
 License & Authors
 -----------------
 - Author:: Tony Nyurkin (<ptqa.mail@gmail.com>)
+- Author:: Dima Medvedev (<dima@medvedev.io>)
 
 ```text
 
