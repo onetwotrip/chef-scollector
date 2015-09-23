@@ -16,6 +16,9 @@
 
 include_recipe 'runit'
 
+chef_gem 'toml'
+require 'toml'
+
 [
 node['scollector']['conf_dir'],
 node['scollector']['collectors_dir'],
@@ -28,13 +31,12 @@ node['scollector']['collectors_dir'],
   end
 end
 
-scollector_config = node['scollector']['config']
-scollector "main" do
-  config scollector_config
-  action :create
+file node['scollector']['config_path'] do
+  content TOML::Generator.new(node['scollector']['config']).body
 end
 
 runit_service 'scollector' do
   cookbook node['scollector']['config_cookbook']
   restart_on_update true
+  subscribes :restart, "file[#{node['scollector']['config_path']}]", :delayed
 end
