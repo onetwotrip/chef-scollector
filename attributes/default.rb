@@ -1,5 +1,6 @@
 default['scollector']['bin_path']        = "#{node['go']['gobin']}/scollector"
 default['scollector']['conf_dir']        = '/etc/scollector'
+default['scollector']['config_path']     = '/etc/scollector/scollector.toml'
 default['scollector']['log_dir']         = '/var/log/scollector'
 default['scollector']['collectors_dir']  = '/etc/scollector/collectors'
 
