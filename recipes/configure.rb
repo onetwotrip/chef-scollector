@@ -37,6 +37,7 @@ end
 
 runit_service 'scollector' do
   cookbook node['scollector']['config_cookbook']
+  ignore_failure node['scollector']['ignore_failure']
   restart_on_update true
   subscribes :restart, "file[#{node['scollector']['config_path']}]", :delayed
 end

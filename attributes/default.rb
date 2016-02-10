@@ -3,6 +3,7 @@ default['scollector']['conf_dir']        = '/etc/scollector'
 default['scollector']['config_path']     = '/etc/scollector/scollector.toml'
 default['scollector']['log_dir']         = '/var/log/scollector'
 default['scollector']['collectors_dir']  = '/etc/scollector/collectors'
+default['scollector']['ignore_failure']  = false
 
 # 'source' for go get or 'package' if you have custom repository
 default['scollector']['install_method'] = 'source'
