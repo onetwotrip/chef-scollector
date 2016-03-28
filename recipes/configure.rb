@@ -16,7 +16,12 @@
 
 include_recipe 'runit'
 
-chef_gem 'toml'
+chef_gem 'toml' do
+  action :remove
+end
+
+chef_gem 'toml-rb'
+
 require 'toml'
 
 [
@@ -32,7 +37,7 @@ node['scollector']['collectors_dir'],
 end
 
 file node['scollector']['config_path'] do
-  content TOML::Generator.new(node['scollector']['config']).body
+  content TOML.dump(node['scollector']['config'])
 end
 
 runit_service 'scollector' do
