@@ -38,6 +38,7 @@ end
 
 file node['scollector']['config_path'] do
   content TOML.dump(node['scollector']['config'])
+  notifies :restart, 'service[scollector]', :delayed
 end
 
 runit_service 'scollector' do
